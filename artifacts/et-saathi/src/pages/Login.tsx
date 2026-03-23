@@ -25,8 +25,8 @@ export default function Login() {
 
   // Mock auto-fill for demo purposes
   const handleDemoLogin = () => {
-    setEmail("demo@etsaathi.in");
-    setPassword("password123");
+    setEmail("demo@etsaathi.com");
+    setPassword("demo123");
   };
 
   return (

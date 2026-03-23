@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { Badge } from '../components/ui/badge';
 import { ConfidenceMeter } from '../components/ui/confidence-meter';
-import { AlertTriangle, Zap, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { AlertTriangle, Zap, TrendingUp, TrendingDown, Minus, Newspaper } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function AnalyzeNews() {
