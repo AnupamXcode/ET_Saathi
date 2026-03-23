@@ -1,0 +1,318 @@
+Build a **production-ready AI-powered web application** called:
+
+# 💼 ET Saathi – Financial Decision & Scenario Simulation Engine
+
+---
+
+## 🎯 CORE PURPOSE
+
+This is NOT a chatbot.
+
+This system must act as a **Financial Decision Intelligence Engine** that:
+
+* Converts financial news and user queries into **structured, explainable, actionable decisions**
+* Simulates **real-world financial scenarios**
+* Provides **personalized insights based on user portfolio**
+
+The system must feel like a **Bloomberg Terminal + AI Assistant**, not ChatGPT.
+
+---
+
+## ⚡ KEY REQUIREMENTS
+
+* Fast response time (< 3 seconds)
+* Modular architecture (agent-based backend)
+* Clean, scalable code (production-ready)
+* Unique UI (NO generic templates)
+* Fully functional (auth, DB, APIs, dashboard)
+
+---
+
+## 🧠 CORE FEATURES
+
+### 1. 🔐 Authentication System
+
+* Login / Signup (JWT-based authentication)
+* Secure session handling
+* Store users in database
+
+---
+
+### 2. 👤 User Profile Engine
+
+Store:
+
+* Portfolio (stocks like Reliance, HDFC, Infosys)
+* Risk level (Low / Medium / High)
+* Investment goal (optional)
+
+Allow:
+
+* Edit profile
+* Portfolio visualization (charts)
+
+---
+
+### 3. 📰 News Intelligence Engine
+
+Input:
+
+* Financial news (text)
+
+AI must:
+
+* Extract key event (rate hike, merger, crash)
+* Identify affected sectors
+* Perform sentiment analysis
+* Output structured JSON
+
+---
+
+### 4. 🔮 What-If Scenario Engine (CORE WOW FEATURE)
+
+Input examples:
+
+* "What if Reliance falls 10%?"
+* "What if interest rates increase by 1%?"
+
+System must:
+
+* Simulate ripple effects across sectors
+* Identify impacted companies
+* Predict market movement (Nifty / sectors)
+* Provide actionable insights
+
+---
+
+### 5. 📊 Decision Engine
+
+Based on:
+
+* News + User Profile + Scenario
+
+Output:
+
+* Recommendation → Buy / Hold / Avoid
+* Confidence Score (0–100%)
+* Risk Level
+
+---
+
+### 6. 💸 Simulation Engine
+
+Input:
+
+* Investment amount (₹X)
+
+Output:
+
+* Estimated future value
+* Comparison:
+
+  * Invest vs Not Invest
+* Use realistic financial assumptions (no fake predictions)
+
+---
+
+### 7. ⚠️ Risk & Validation Engine
+
+Detect:
+
+* Unrealistic claims
+* Misleading news
+
+Output:
+
+* Warning messages
+* Confidence adjustments
+
+---
+
+### 8. 🧠 Explainability Engine
+
+ALWAYS explain:
+
+* Why recommendation was made
+* In simple, beginner-friendly language
+
+---
+
+## 🧩 SYSTEM ARCHITECTURE (MANDATORY)
+
+Implement backend as **modular agents (separate functions/services):**
+
+* News Agent → extract events
+* Impact Agent → market impact
+* User Agent → personalize
+* Decision Agent → recommendation
+* Simulation Agent → projections
+* Risk Agent → validation
+* Explainability Agent → reasoning
+
+---
+
+## 🎨 FRONTEND (VERY IMPORTANT – MUST BE UNIQUE)
+
+Design a **premium dashboard UI**:
+
+### 🎨 Theme:
+
+* Primary: #0D0D0D (Black)
+* Secondary: #F5F5DC (Beige)
+* Accent: Soft gold / muted orange
+
+### 💡 UI Requirements:
+
+* Glassmorphism / soft shadows
+* Smooth animations (hover, transitions)
+* Card-based layout
+* No blue-white templates
+
+### 📊 Dashboard Sections:
+
+* 📊 Market Impact Card
+* 📈 Recommendation Card
+* 🔮 Simulation Card
+* ⚠️ Risk Warning Card
+* 🧠 Explanation Card
+* 🎯 Confidence Meter
+
+### 📈 Charts:
+
+* Portfolio distribution (pie chart)
+* Simulation graph (line chart)
+* Market trends (bar/line)
+
+---
+
+## 💻 TECH STACK
+
+### Frontend:
+
+* React.js (Vite)
+* Tailwind CSS
+* Framer Motion (animations)
+* Recharts or Plotly
+
+### Backend:
+
+* FastAPI (preferred)
+
+### AI:
+
+* Google Gemini API
+
+### Database:
+
+* PostgreSQL (preferred)
+  OR MongoDB
+
+Store:
+
+* Users
+* Profiles
+* Query history
+* Results
+
+---
+
+## 🔗 API DESIGN
+
+Create clean REST APIs:
+
+* /auth/signup
+* /auth/login
+* /profile
+* /analyze-news
+* /scenario
+* /decision
+* /simulate
+
+---
+
+## ⚡ PERFORMANCE OPTIMIZATION
+
+* Async FastAPI endpoints
+* Caching (recent queries)
+* Efficient API calls
+* Minimal latency UI rendering
+
+---
+
+## 🧪 OUTPUT FORMAT (UI)
+
+Always display structured output:
+
+1. 📊 Market Impact
+2. 📈 Recommendation
+3. 🔮 Simulation Result
+4. ⚠️ Risk Warning
+5. 🧠 Explanation
+6. 🎯 Confidence Score
+
+---
+
+## 📦 DELIVERABLES (IMPORTANT)
+
+Generate COMPLETE working code:
+
+### Backend:
+
+* FastAPI project
+* Modular agents
+* API routes
+* Gemini integration
+
+### Frontend:
+
+* React app
+* Styled dashboard
+* API integration
+
+### Database:
+
+* Schema/models
+* Sample data
+
+### Extras:
+
+* .env setup
+* README with setup steps
+* Demo-ready UI
+
+---
+
+## 🚫 STRICTLY AVOID
+
+* Chatbot-style interface
+* Plain text output
+* Basic UI templates
+* Over-engineering
+
+---
+
+## 🎯 FINAL GOAL
+
+Build a system that feels like:
+
+"An AI-powered financial analyst that thinks, simulates, and explains decisions."
+
+This should impress judges with:
+
+* Innovation
+* Real-world usefulness
+* Clean design
+* Intelligent outputs
+
+---
+
+## ⚡ BONUS (IF POSSIBLE)
+
+* Add “AI Personal Assistant Panel” (side panel)
+* Add “Recent Analysis History”
+* Add dark/light toggle (keep premium theme)
+* Add loading animations (skeleton UI)
+
+---
+
+Generate the FULL project now.

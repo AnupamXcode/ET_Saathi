@@ -1,15 +1,20 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: ET Saathi Financial Intelligence Engine API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: profile
+    description: User profile operations
+  - name: analysis
+    description: Financial analysis and AI operations
 paths:
   /healthz:
     get:
@@ -24,6 +29,201 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/signup:
+    post:
+      operationId: signup
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login existing user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "404":
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileRequest"
+      responses:
+        "200":
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /analyze-news:
+    post:
+      operationId: analyzeNews
+      tags: [analysis]
+      summary: Analyze financial news
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsAnalysisRequest"
+      responses:
+        "200":
+          description: News analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsAnalysisResult"
+
+  /scenario:
+    post:
+      operationId: runScenario
+      tags: [analysis]
+      summary: Run what-if scenario simulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScenarioRequest"
+      responses:
+        "200":
+          description: Scenario simulation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioResult"
+
+  /decision:
+    post:
+      operationId: getDecision
+      tags: [analysis]
+      summary: Get investment decision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DecisionRequest"
+      responses:
+        "200":
+          description: Decision result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DecisionResult"
+
+  /simulate:
+    post:
+      operationId: runSimulation
+      tags: [analysis]
+      summary: Run investment simulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimulationRequest"
+      responses:
+        "200":
+          description: Simulation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimulationResult"
+
+  /history:
+    get:
+      operationId: getHistory
+      tags: [analysis]
+      summary: Get analysis history
+      responses:
+        "200":
+          description: List of past analyses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HistoryResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +234,439 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+
+    SignupRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+        name:
+          type: string
+      required:
+        - email
+        - password
+        - name
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - token
+        - user
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - name
+        - createdAt
+
+    PortfolioStock:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+        quantity:
+          type: number
+        avgPrice:
+          type: number
+        currentPrice:
+          type: number
+        allocation:
+          type: number
+      required:
+        - symbol
+        - name
+        - quantity
+        - avgPrice
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        riskLevel:
+          type: string
+          enum: [low, medium, high]
+        investmentGoal:
+          type: string
+        portfolio:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioStock"
+        totalInvested:
+          type: number
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - riskLevel
+        - portfolio
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        riskLevel:
+          type: string
+          enum: [low, medium, high]
+        investmentGoal:
+          type: string
+        portfolio:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioStock"
+
+    NewsAnalysisRequest:
+      type: object
+      properties:
+        newsText:
+          type: string
+        userId:
+          type: integer
+      required:
+        - newsText
+
+    AffectedSector:
+      type: object
+      properties:
+        name:
+          type: string
+        impact:
+          type: string
+          enum: [positive, negative, neutral]
+        magnitude:
+          type: number
+      required:
+        - name
+        - impact
+        - magnitude
+
+    NewsAnalysisResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        keyEvent:
+          type: string
+        eventType:
+          type: string
+        affectedSectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/AffectedSector"
+        sentiment:
+          type: string
+          enum: [bullish, bearish, neutral]
+        sentimentScore:
+          type: number
+        marketImpact:
+          type: string
+        summary:
+          type: string
+        riskWarnings:
+          type: array
+          items:
+            type: string
+        confidence:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - keyEvent
+        - eventType
+        - affectedSectors
+        - sentiment
+        - sentimentScore
+        - marketImpact
+        - summary
+        - confidence
+
+    ScenarioRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        userId:
+          type: integer
+      required:
+        - query
+
+    ImpactedCompany:
+      type: object
+      properties:
+        name:
+          type: string
+        symbol:
+          type: string
+        impact:
+          type: number
+        direction:
+          type: string
+          enum: [up, down, neutral]
+        reason:
+          type: string
+      required:
+        - name
+        - symbol
+        - impact
+        - direction
+        - reason
+
+    SectorImpact:
+      type: object
+      properties:
+        sector:
+          type: string
+        change:
+          type: number
+        direction:
+          type: string
+          enum: [up, down, neutral]
+      required:
+        - sector
+        - change
+        - direction
+
+    ScenarioResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        scenario:
+          type: string
+        niftyImpact:
+          type: number
+        sectorImpacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/SectorImpact"
+        impactedCompanies:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImpactedCompany"
+        portfolioImpact:
+          type: number
+        actionableInsights:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+        confidence:
+          type: number
+        timeframe:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - scenario
+        - niftyImpact
+        - sectorImpacts
+        - impactedCompanies
+        - actionableInsights
+        - explanation
+        - confidence
+
+    DecisionRequest:
+      type: object
+      properties:
+        stockSymbol:
+          type: string
+        newsContext:
+          type: string
+        userId:
+          type: integer
+      required:
+        - stockSymbol
+
+    DecisionResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        stock:
+          type: string
+        recommendation:
+          type: string
+          enum: [buy, hold, avoid]
+        confidence:
+          type: number
+        riskLevel:
+          type: string
+          enum: [low, medium, high]
+        targetPrice:
+          type: number
+        stopLoss:
+          type: number
+        timeHorizon:
+          type: string
+        reasons:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+        warnings:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - stock
+        - recommendation
+        - confidence
+        - riskLevel
+        - reasons
+        - explanation
+
+    SimulationRequest:
+      type: object
+      properties:
+        stockSymbol:
+          type: string
+        amount:
+          type: number
+        years:
+          type: integer
+        userId:
+          type: integer
+      required:
+        - stockSymbol
+        - amount
+        - years
+
+    SimulationDataPoint:
+      type: object
+      properties:
+        year:
+          type: integer
+        investedValue:
+          type: number
+        notInvestedValue:
+          type: number
+      required:
+        - year
+        - investedValue
+        - notInvestedValue
+
+    SimulationResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        stock:
+          type: string
+        initialAmount:
+          type: number
+        projectedValue:
+          type: number
+        notInvestedValue:
+          type: number
+        annualReturn:
+          type: number
+        totalReturn:
+          type: number
+        dataPoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/SimulationDataPoint"
+        assumptions:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - stock
+        - initialAmount
+        - projectedValue
+        - notInvestedValue
+        - annualReturn
+        - totalReturn
+        - dataPoints
+        - assumptions
+        - explanation
+
+    HistoryItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [news, scenario, decision, simulation]
+        query:
+          type: string
+        result:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - query
+        - createdAt
+
+    HistoryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/HistoryItem"
+      required:
+        - items

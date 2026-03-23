@@ -1,8 +1,8 @@
-# Workspace
+# ET Saathi – Financial Intelligence Engine
 
 ## Overview
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+A production-ready AI-powered financial decision and scenario simulation engine. Think Bloomberg Terminal + AI analyst. Users can analyze news, run what-if scenarios, get investment decisions, and simulate portfolio outcomes — all powered by Gemini AI.
 
 ## Stack
 
@@ -14,83 +14,78 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Database**: PostgreSQL + Drizzle ORM
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+- **Build**: esbuild
+- **AI**: Google Gemini 2.5 Flash (via Replit AI Integrations)
+- **Auth**: JWT (bcryptjs + jsonwebtoken)
+- **Frontend**: React + Vite + Tailwind CSS + Recharts + Framer Motion
 
 ## Structure
 
 ```text
 artifacts-monorepo/
-├── artifacts/              # Deployable applications
-│   └── api-server/         # Express API server
-├── lib/                    # Shared libraries
+├── artifacts/
+│   ├── api-server/         # Express API server
+│   └── et-saathi/          # React frontend (at preview path /)
+├── lib/
 │   ├── api-spec/           # OpenAPI spec + Orval codegen config
 │   ├── api-client-react/   # Generated React Query hooks
-│   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   └── db/                 # Drizzle ORM schema + DB connection
-├── scripts/                # Utility scripts (single workspace package)
-│   └── src/                # Individual .ts scripts, run via `pnpm --filter @workspace/scripts run <script>`
-├── pnpm-workspace.yaml     # pnpm workspace (artifacts/*, lib/*, lib/integrations/*, scripts)
-├── tsconfig.base.json      # Shared TS options (composite, bundler resolution, es2022)
-├── tsconfig.json           # Root TS project references
-└── package.json            # Root package with hoisted devDeps
+│   ├── api-zod/            # Generated Zod schemas
+│   ├── db/                 # Drizzle ORM schema + DB connection
+│   └── integrations-gemini-ai/ # Gemini AI integration
+├── scripts/
+├── pnpm-workspace.yaml
+├── tsconfig.base.json
+├── tsconfig.json
+└── package.json
 ```
 
-## TypeScript & Composite Projects
+## Features
 
-Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all packages as project references. This means:
+1. **Auth**: JWT signup/login, stored in localStorage
+2. **News Intelligence**: AI extracts events, sectors, sentiment from news text
+3. **Scenario Engine**: "What if Reliance falls 10%?" → ripple effects simulation
+4. **Decision Engine**: Buy/Hold/Avoid with confidence scores and explanations
+5. **Simulation Engine**: Project investment value over time vs savings
+6. **Portfolio**: Manage holdings, risk level, goals; pie chart visualization
+7. **History**: Timeline of all past analyses
 
-- **Always typecheck from the root** — run `pnpm run typecheck` (which runs `tsc --build --emitDeclarationOnly`). This builds the full dependency graph so that cross-package imports resolve correctly. Running `tsc` inside a single package will fail if its dependencies haven't been built yet.
-- **`emitDeclarationOnly`** — we only emit `.d.ts` files during typecheck; actual JS bundling is handled by esbuild/tsx/vite...etc, not `tsc`.
-- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in its `references` array. `tsc --build` uses this to determine build order and skip up-to-date packages.
+## AI Agents (Backend)
 
-## Root Scripts
+- `newsAgent.ts` — Analyzes financial news text
+- `scenarioAgent.ts` — Simulates what-if market scenarios
+- `decisionAgent.ts` — Provides investment recommendations
+- `simulationAgent.ts` — Projects future portfolio value
+- `gemini.ts` — Shared Gemini client + JSON generation helper
 
-- `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
-- `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
+## API Routes
 
-## Packages
+- `POST /api/auth/signup` — Register
+- `POST /api/auth/login` — Login (returns JWT)
+- `GET /api/auth/me` — Current user
+- `GET/PUT /api/profile` — User profile + portfolio
+- `POST /api/analyze-news` — News analysis
+- `POST /api/scenario` — Scenario simulation
+- `POST /api/decision` — Investment decision
+- `POST /api/simulate` — Investment simulation
+- `GET /api/history` — Analysis history
 
-### `artifacts/api-server` (`@workspace/api-server`)
+## Database Schema
 
-Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` for request and response validation and `@workspace/db` for persistence.
+- `users` — email, passwordHash, name
+- `profiles` — riskLevel, investmentGoal, portfolio (JSON), totalInvested
+- `analysis_history` — type, query, result (JSON), userId
 
-- Entry: `src/index.ts` — reads `PORT`, starts Express
-- App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health` (full path: `/api/health`)
-- Depends on: `@workspace/db`, `@workspace/api-zod`
-- `pnpm --filter @workspace/api-server run dev` — run the dev server
-- `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
-- Build bundles an allowlist of deps (express, cors, pg, drizzle-orm, zod, etc.) and externalizes the rest
+## Environment Variables
 
-### `lib/db` (`@workspace/db`)
+- `DATABASE_URL` — PostgreSQL connection string (auto-provisioned)
+- `AI_INTEGRATIONS_GEMINI_BASE_URL` — Gemini proxy URL (auto-provisioned)
+- `AI_INTEGRATIONS_GEMINI_API_KEY` — Gemini API key (auto-provisioned)
+- `JWT_SECRET` — JWT signing secret (defaults to built-in value)
+- `PORT` — Service port (auto-assigned)
 
-Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client instance and schema models.
+## Theme
 
-- `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
-- `src/schema/index.ts` — barrel re-export of all models
-- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas (no models definitions exist right now)
-- `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
-- Exports: `.` (pool, db, schema), `./schema` (schema only)
-
-Production migrations are handled by Replit when publishing. In development, we just use `pnpm --filter @workspace/db run push`, and we fallback to `pnpm --filter @workspace/db run push-force`.
-
-### `lib/api-spec` (`@workspace/api-spec`)
-
-Owns the OpenAPI 3.1 spec (`openapi.yaml`) and the Orval config (`orval.config.ts`). Running codegen produces output into two sibling packages:
-
-1. `lib/api-client-react/src/generated/` — React Query hooks + fetch client
-2. `lib/api-zod/src/generated/` — Zod schemas
-
-Run codegen: `pnpm --filter @workspace/api-spec run codegen`
-
-### `lib/api-zod` (`@workspace/api-zod`)
-
-Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used by `api-server` for response validation.
-
-### `lib/api-client-react` (`@workspace/api-client-react`)
-
-Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
-
-### `scripts` (`@workspace/scripts`)
-
-Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
+- Background: #0D0D0D (near-black)
+- Accent: Muted gold/amber
+- Text: Warm off-white/beige
+- Cards: Glassmorphism with soft dark panels

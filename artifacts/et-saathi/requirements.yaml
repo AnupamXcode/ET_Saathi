@@ -1,0 +1,13 @@
+packages:
+  "recharts": "Required for portfolio pie charts, scenario bar charts, and simulation line charts"
+  "framer-motion": "Required for premium page transitions, card entry animations, and smooth UI interactions"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without conflicts"
+  "@hookform/resolvers": "Required for form validation with react-hook-form and zod"
+  "react-hook-form": "Required for managing complex forms (signup, login, portfolio)"
+  "zod": "Schema validation for forms and API responses"
+
+notes:
+  - Custom API wrapper will read token from localStorage and inject into Authorization header
+  - Using Recharts for all data visualizations (Portfolio, Scenarios, Simulations)
+  - All mock data or default API fallbacks handle potential missing backend endpoints gracefully

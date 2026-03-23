@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "ET Saathi – Financial Intelligence Engine"
+version = "1.0.0"
+id = "artifacts/et-saathi"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21159
+
+[services.development]
+run = "pnpm --filter @workspace/et-saathi run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/et-saathi", "run", "build" ]
+publicDir = "artifacts/et-saathi/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21159"
+BASE_PATH = "/"
